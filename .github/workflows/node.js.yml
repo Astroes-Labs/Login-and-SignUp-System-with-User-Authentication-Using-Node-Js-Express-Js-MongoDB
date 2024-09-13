@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [21.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -29,9 +28,6 @@ jobs:
 
     - name: Set up MongoDB environment
       run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV
-
-    - name: Build project
-      run: npm run build --if-present
 
     - name: Run tests
       run: npm test
