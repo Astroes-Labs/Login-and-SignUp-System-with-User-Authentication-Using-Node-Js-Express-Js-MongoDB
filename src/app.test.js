@@ -1,9 +1,20 @@
 const request = require('supertest');
-const app = require('./index'); // Adjust the path to your app
+const mongoose = require('mongoose');
+const app = require('./index'); // Import your express app
+
+beforeAll(async () => {
+  // Set NODE_ENV to 'test' for testing
+  process.env.NODE_ENV = 'test';
+});
+
+afterAll(async () => {
+  // Close database connection after tests
+  await mongoose.connection.close();
+});
 
 describe('GET /', () => {
   it('should return 200', async () => {
-    const res = await request(app).get('/');
-    expect(res.statusCode).toBe(200);
+    const response = await request(app).get('/');
+    expect(response.status).toBe(200);
   });
 });
