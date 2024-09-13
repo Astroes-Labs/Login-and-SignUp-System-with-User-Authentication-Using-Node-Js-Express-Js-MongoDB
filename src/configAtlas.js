@@ -5,10 +5,7 @@ require('dotenv').config(); // Ensure this is at the top if using local .env fil
 const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/Login-tut";
 
 // Connect to MongoDB
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(mongoURI)
 .then(() => {
     console.log("Database connected Successfully");
 })
