@@ -4,20 +4,17 @@ const bcrypt = require("bcrypt");
 
 const collection = require("./configAtlas");
 
-
 const app = express();
 
 //convert data into json format
 app.use(express.json());
 
-
 app.use(express.urlencoded({extended: false}));
 
 //use EJS as the view engine
- 
 app.set('view engine', 'ejs');
-//static file
 
+//static file
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
@@ -27,7 +24,6 @@ app.get("/", (req, res) => {
 app.get("/signup",  (req, res) => {
     res.render("signup");
 });
-
 
 //Register User
 app.post("/signup", async (req, res) => {
@@ -47,6 +43,7 @@ app.post("/signup", async (req, res) => {
         data.password = hashedPassword;
         const userdata = await collection.insertMany(data);
         console.log(userdata);
+        res.status(201).send("User created successfully");
     }
 });
 
@@ -55,24 +52,27 @@ app.post("/login", async (req,res) => {
     try {
         const check = await collection.findOne({name: req.body.username});
         if(!check){
-            res.send("user name cannot be found.")
-       }
+            res.status(404).send("Username cannot be found.")
+        }
 
-       //compare the hash password form the database with the plain text
-       const isPasswordMatch = await bcrypt.compare(req.body.password, check.password);
-       if (isPasswordMatch) {
-        res.render("home");
-       } else {
-        req.send("wrong password");
-       }
+        //compare the hash password form the database with the plain text
+        const isPasswordMatch = await bcrypt.compare(req.body.password, check.password);
+        if (isPasswordMatch) {
+            res.status(200).render("home");
+        } else {
+            res.status(400).send("Wrong password");
+        }
     }catch{
-
-        res.send("wrong details");
+        res.status(500).send("Error in login process");
     }
 });
 
 const port = 5000;
 
-app.listen(port, () => {
-    console.log(`Server running on port: ${port}`)
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Server running on port: ${port}`)
+    });
+}
+
+module.exports = app; // Export app for testing
