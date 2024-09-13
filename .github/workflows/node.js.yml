@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [21.x]
-
     steps:
     - uses: actions/checkout@v4
 
@@ -26,8 +22,12 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Set up MongoDB environment
+    - name: Set up environment variables
       run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV
+      run: echo "TEST_MONGO_URI=${{ secrets.TEST_MONGO_URI }}" >> $GITHUB_ENV
+
+    - name: Build project
+      run: npm run build --if-present
 
     - name: Run tests
-      run: npm test
+      run: npm test -- --detectOpenHandles
