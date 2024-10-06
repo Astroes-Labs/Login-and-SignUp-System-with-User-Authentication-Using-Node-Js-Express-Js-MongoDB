@@ -37,3 +37,9 @@ jobs:
 
     - name: Run tests
       run: npm test -- --detectOpenHandles
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public  # Adjust to your build output directory
+
