@@ -43,3 +43,10 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./public  # Adjust to your build output directory
 
+    - name: Deploy to Heroku
+      run: |
+        git remote add heroku https://git.heroku.com/<your-heroku-app>.git
+        git push heroku main
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
